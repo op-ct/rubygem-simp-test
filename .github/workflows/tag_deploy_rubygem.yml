@@ -49,7 +49,7 @@ jobs:
           clean: true
       - name: Set commands ()
         id: commands
-        run:
+        run: |
           # By default, these are the standard tasks from "bundler/gem_tasks"
           # To override them in the LOCAL_WORKFLOW_CONFIG_FILE
           GEM_BUILD_COMMAND: 'bundle exec rake build'
@@ -116,7 +116,7 @@ jobs:
           draft: false
           prerelease: false
 
-  deploy-rubygem
+  deploy-rubygem:
     name: Deploy RubyGem Release
     needs: [ releng-checks ]
     runs-on: ubuntu-18.04
