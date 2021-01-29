@@ -37,6 +37,9 @@ jobs:
   releng-checks:
     name: "RELENG checks"
     runs-on: ubuntu-18.04
+    outputs:
+      build_command: ${{ steps.commands.outputs.build_command }}
+      release_command: ${{ steps.commands.outputs.release_command }}
     steps:
       - name: "Assert '${{ github.ref }}' is a tag"
         run: '[[ "$GITHUB_REF" =~ ^refs/tags/ ]] || { echo "::error ::GITHUB_REF is not a tag: ${GITHUB_REF}"; exit 1 ; }'
@@ -113,12 +116,14 @@ jobs:
           draft: false
           prerelease: false
 
-  deploy-to-puppet-forge:
-    name: Deploy PuppetForge Release
+  deploy-rubygem
+    name: Deploy RubyGem Release
     needs: [ releng-checks ]
     runs-on: ubuntu-18.04
     env:
       RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
+      BUILD_COMMAND: ${{ needs.releng-checks.outputs.build_command }}
+      RELEASE_COMMAND: ${{ needs.releng-checks.outputs.release_command }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
