@@ -47,13 +47,13 @@ jobs:
         with:
           ref: ${{ github.ref }}
           clean: true
-      - name: Set commands ()
+      - name: Set commands
         id: commands
         run: |
           # By default, these are the standard tasks from "bundler/gem_tasks"
           # To override them in the LOCAL_WORKFLOW_CONFIG_FILE
-          GEM_BUILD_COMMAND: 'bundle exec rake build'
-          GEM_RELEASE_COMMAND: 'bundle exec rake release'
+          GEM_BUILD_COMMAND='bundle exec rake build'
+          GEM_RELEASE_COMMAND='bundle exec rake release'
           if jq -r '. | keys' "$LOCAL_WORKFLOW_CONFIG_FILE" 2>/dev/null | \
               grep -w '"gem_build_command"' &> /dev/null; then
             GEM_BUILD_COMMAND="$(jq .gem_build_command "$LOCAL_WORKFLOW_CONFIG_FILE" )"
@@ -70,7 +70,7 @@ jobs:
         with:
           ruby-version: 2.5
           bundler-cache: true
-      - run: ${{ steps.commands.outputs.build_command }}
+      - run: "${{ steps.commands.outputs.build_command }}"
 
   create-github-release:
     if: false
