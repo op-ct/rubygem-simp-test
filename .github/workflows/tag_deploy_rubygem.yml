@@ -51,12 +51,12 @@ jobs:
       - name: Set commands ()
         id: commands
         run:
-          if [ -f "$LOCAL_WORKFLOW_CONFIG_FILE" ] && \\
-            jq -r '. | keys' "$LOCAL_WORKFLOW_CONFIG_FILE" | grep -w '"gem_build_command'; then
-            GEM_BUILD_COMMAND="$(jq .gem_release_command "$LOCAL_WORKFLOW_CONFIG_FILE" )"
+          if jq -r '. | keys' "$LOCAL_WORKFLOW_CONFIG_FILE" 2>/dev/null | \
+              grep -w '"gem_build_command"' &> /dev/null; then
+            GEM_BUILD_COMMAND="$(jq .gem_build_command "$LOCAL_WORKFLOW_CONFIG_FILE" )"
           fi
-          if [ -f "$LOCAL_WORKFLOW_CONFIG_FILE" ] && \\
-            jq -r '. | keys' "$LOCAL_WORKFLOW_CONFIG_FILE" | grep -w '"gem_build_command'; then
+          if jq -r '. | keys' "$LOCAL_WORKFLOW_CONFIG_FILE" 2>/dev/null | \
+              grep -w '"gem_release_command"' &> /dev/null; then
             GEM_RELEASE_COMMAND="$(jq .gem_release_command "$LOCAL_WORKFLOW_CONFIG_FILE" )"
           fi
           echo "::set-output name=build_command::${GEM_BUILD_COMMAND}"
