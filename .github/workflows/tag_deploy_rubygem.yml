@@ -31,10 +31,6 @@ on:
 
 env:
   PUPPET_VERSION: '~> 6'
-  # By default, these are the standard tasks from "bundler/gem_tasks"
-  # To override them
-  GEM_BUILD_COMMAND: 'bundle exec rake build'
-  GEM_RELEASE_COMMAND: 'bundle exec rake release'
   LOCAL_WORKFLOW_CONFIG_FILE: .github/workflows.local.json
 
 jobs:
@@ -51,6 +47,10 @@ jobs:
       - name: Set commands ()
         id: commands
         run:
+          # By default, these are the standard tasks from "bundler/gem_tasks"
+          # To override them in the LOCAL_WORKFLOW_CONFIG_FILE
+          GEM_BUILD_COMMAND: 'bundle exec rake build'
+          GEM_RELEASE_COMMAND: 'bundle exec rake release'
           if jq -r '. | keys' "$LOCAL_WORKFLOW_CONFIG_FILE" 2>/dev/null | \
               grep -w '"gem_build_command"' &> /dev/null; then
             GEM_BUILD_COMMAND="$(jq .gem_build_command "$LOCAL_WORKFLOW_CONFIG_FILE" )"
@@ -60,14 +60,14 @@ jobs:
             GEM_RELEASE_COMMAND="$(jq .gem_release_command "$LOCAL_WORKFLOW_CONFIG_FILE" )"
           fi
           echo "::set-output name=build_command::${GEM_BUILD_COMMAND}"
-          echo "::set-output name=build_command::${GEM_BUILD_COMMAND}"
-          echo "+set-output name=release_command::${GEM_RELEASE_COMMAND}"
+          echo "::set-output name=release_command::${GEM_RELEASE_COMMAND}"
+          echo "+set-output name=build_command::${GEM_BUILD_COMMAND}"
           echo "+set-output name=release_command::${GEM_RELEASE_COMMAND}"
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.5
           bundler-cache: true
-      - run: bundle exec gem build
+      - run: ${{ steps.commands.outputs.build_command }}
 
   create-github-release:
     if: false
