@@ -60,7 +60,9 @@ jobs:
             GEM_RELEASE_COMMAND="$(jq .gem_release_command "$LOCAL_WORKFLOW_CONFIG_FILE" )"
           fi
           echo "::set-output name=build_command::${GEM_BUILD_COMMAND}"
-          echo "::set-output name=release_command::${GEM_RELEASE_COMMAND}"
+          echo "::set-output name=build_command::${GEM_BUILD_COMMAND}"
+          echo "+set-output name=release_command::${GEM_RELEASE_COMMAND}"
+          echo "+set-output name=release_command::${GEM_RELEASE_COMMAND}"
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.5
