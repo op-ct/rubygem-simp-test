@@ -1,4 +1,4 @@
-# Simp::Test
+# Test gem
 
 This gem does nothing; it is used to test CI
 
