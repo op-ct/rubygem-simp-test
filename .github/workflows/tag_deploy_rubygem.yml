@@ -47,7 +47,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
           clean: true
-      - name: Set commands
+      - name: Determing build and release commands
         id: commands
         run: |
           # By default, these are the standard tasks from "bundler/gem_tasks"
@@ -70,7 +70,8 @@ jobs:
         with:
           ruby-version: 2.5
           bundler-cache: true
-      - run: "${{ steps.commands.outputs.build_command }}"
+      - name: Test build the package
+        run: "${{ steps.commands.outputs.build_command }}"
 
   create-github-release:
     if: false
@@ -136,7 +137,7 @@ jobs:
           bundler-cache: true
       - name: Build RubyGem
         run: |
-          exec "$BUILD_COMMAND"
+          $BUILD_COMMAND
 
       - name: Deploy to Puppet Forge
         run: |
@@ -153,4 +154,4 @@ jobs:
           chmod -R go=u-w .
 
           echo "Running gem release..."
-          echo exec "$RELEASE_COMMAND"
+          echo $RELEASE_COMMAND
