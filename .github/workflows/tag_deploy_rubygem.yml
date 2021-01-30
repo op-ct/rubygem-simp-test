@@ -136,12 +136,10 @@ jobs:
           ruby-version: 2.5
           bundler-cache: true
       - name: Build RubyGem
-        run: |
-          $BUILD_COMMAND
+        run: '$BUILD_COMMAND'
 
       - name: Deploy to Puppet Forge
         run: |
-
           echo "Setting up gem credentials..."
           mkdir -p ~/.gem
 
@@ -153,5 +151,5 @@ jobs:
 
           chmod -R go=u-w .
 
-          echo "Running gem release..."
-          echo $RELEASE_COMMAND
+          echo "Running '$RELEASE_COMMAND'..."
+          $RELEASE_COMMAND
