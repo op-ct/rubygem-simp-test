@@ -53,7 +53,7 @@ jobs:
           # By default, these are the standard tasks from "bundler/gem_tasks"
           # To override them in the LOCAL_WORKFLOW_CONFIG_FILE
           GEM_BUILD_COMMAND='bundle exec rake build'
-          GEM_RELEASE_COMMAND='bundle exec rake release'
+          GEM_RELEASE_COMMAND='rake release:rubygem_push'
           if jq -r '. | keys' "$LOCAL_WORKFLOW_CONFIG_FILE" 2>/dev/null | \
               grep -w '"gem_build_command"' &> /dev/null; then
             GEM_BUILD_COMMAND="$(jq .gem_build_command "$LOCAL_WORKFLOW_CONFIG_FILE" )"
@@ -138,7 +138,7 @@ jobs:
       - name: Build RubyGem
         run: '$BUILD_COMMAND'
 
-      - name: Deploy to Puppet Forge
+      - name: Release RubyGem
         run: |
           echo "Setting up gem credentials..."
           mkdir -p ~/.gem
